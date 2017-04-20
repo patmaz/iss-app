@@ -43,7 +43,10 @@ class Iss extends React.Component {
                 <div id={'map'}>
 
                 </div>
-                <p>{ this.props.issPosition.area }</p>
+                <iframe id={'streaming'}
+                        src={"http://www.ustream.tv/embed/17074538?html5ui"}
+                        scrolling={"no"}
+                        frameBorder={"0"}/>
             </div>
         )
     }
