@@ -2,6 +2,11 @@
  * Created by patrykmazurkiewicz on 18/04/2017.
  */
 import fetch from 'isomorphic-fetch';
+import maps from '@google/maps';
+
+const googleMapsClient = maps.createClient({
+    key: 'AIzaSyCXTF8P60IRs5yCjG1XdtEk3uHsBhWKjU8'
+});
 
 export const GET_COORDS = 'GET_COORDS';
 export const GET_AREA = 'GET_AREA';
@@ -35,15 +40,15 @@ export function getCoordsRequest() {
                 lat: parseFloat(res.iss_position.latitude),
                 lng: parseFloat(res.iss_position.longitude)
             };
-            const geocoder = new window.google.maps.Geocoder;
-            geocoder.geocode({'location': coords}, function(results, status) {
-                if (status === 'OK') {
-                    if (results) {
-                        dispatch(getArea(results[1].formatted_address));
+            googleMapsClient.reverseGeocode({'latlng': coords}, (nul, res) => {
+                if (res.status === 200) {
+                    if (res.json.results[1]) {
+                        dispatch(getArea(res.json.results[1].formatted_address));
                     } else {
-                        dispatch(getArea('No result'));                    }
+                        dispatch(getArea('No results'));
+                    }
                 } else {
-                    dispatch(getArea('Geocoder failed due to: ' + status));
+                    dispatch(getArea('Geocoder error: ' + res.status));
                 }
             });
         });
